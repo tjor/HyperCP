@@ -16,6 +16,7 @@ Source/.DS_Store
 *.log
 
 Data/Sample_Data/*
+Data/FidRadDB_characterization/
 
 runtest.py
 run_NASA*.py
