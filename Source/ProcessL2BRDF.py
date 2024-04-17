@@ -80,7 +80,7 @@ class ProcessL2BRDF():
                         if (k != 'Datetime') and (k != 'Datetag') and (k != 'Timetag2'):
                             nLw_fQ[k] = ( np.array(nLw[k]) * np.array(brdf_dict[k]) ).tolist()
 
-                    nLw_fQ_ds = gp.addDataset(f"{ds}_fQ")
+                    nLw_fQ_ds = gp.addDataset(f"{ds}_M02")
                     nLw_fQ_ds.columns  = nLw_fQ
                     nLw_fQ_ds.columnsToDataset()
 
