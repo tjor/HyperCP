@@ -543,7 +543,9 @@ class Propagate:
     @staticmethod
     def zhangWrapper(windSpeedMean, AOD, sza, wTemp, sal, relAz, sva, waveBands):
         """ Wrapper for Zhang17 rho calculation to be called by punpy """
+      
         # === environmental conditions during experiment ===
+        sza = np.min([60, sza]) # TJ - I also got an instance where sza > 60
         env = {'wind': windSpeedMean, 'od': AOD, 'C': None, 'zen_sun': sza, 'wtem': wTemp, 'sal': sal}
 
         # === The sensor ===
@@ -552,7 +554,7 @@ class Propagate:
         # sensor = {'ang': np.array([sva, 180 - relAz]), 'wv': np.array(waveBands)}
         relAz = np.min([180, 180 - relAz]) # TJ - I got an instance where rel_az was > 180, so added this as a fix.
         sensor = {'ang': np.array([sva,  relAz]), 'wv': np.array(waveBands)} 
-    
+
         rho = ZhangRho.get_sky_sun_rho(env, sensor)['rho']
 
         return rho

@@ -224,7 +224,9 @@ class RhoCorrections:
             wt = 20
         if rel_az > 140:
             rel_az = 140
-
+        if sza > 60:
+            sza = 60
+            
         if "vzen" in z17_lut.coords:
             LUT = z17_lut.sel(vzen=sva, method='nearest')
         else:
