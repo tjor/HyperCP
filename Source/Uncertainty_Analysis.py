@@ -545,14 +545,18 @@ class Propagate:
         """ Wrapper for Zhang17 rho calculation to be called by punpy """
       
         # === environmental conditions during experiment ===
-        sza = np.min([60, sza]) # TJ - I also got an instance where sza > 60
+        if sza > 60:
+            sza = 60
+        if windSpeedMean < 0: # TJ - I also got instance where wind < 0
+            windSpeedMean = 0        
         env = {'wind': windSpeedMean, 'od': AOD, 'C': None, 'zen_sun': sza, 'wtem': wTemp, 'sal': sal}
-
+        print(env)
         # === The sensor ===
         # Current database is not limited near these values
-        
+       
         # sensor = {'ang': np.array([sva, 180 - relAz]), 'wv': np.array(waveBands)}
-        relAz = np.min([180, 180 - relAz]) # TJ - I got an instance where rel_az was > 180, so added this as a fix.
+        if  relAz > 180:
+            relAz = 180
         sensor = {'ang': np.array([sva,  relAz]), 'wv': np.array(waveBands)} 
 
         rho = ZhangRho.get_sky_sun_rho(env, sensor)['rho']
