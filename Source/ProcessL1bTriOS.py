@@ -12,7 +12,7 @@ from Source.ProcessL1b_Interp import ProcessL1b_Interp
 from Source.Utilities import Utilities
 from Source.GetAnc import GetAnc
 from Source.GetAnc_ecmwf import GetAnc_ecmwf
-from Source.FidradDB_api import FidradDB_api6s
+from Source.FidradDB_api import FidradDB_api
 
 
 class ProcessL1bTriOS:
@@ -458,7 +458,7 @@ class ProcessL1bTriOS:
                 ds.columns["solar_zenith"] = solar_zenith
                 ds.columnsToDataset()
             else:
-                msg = 'Cannot run sixS as < 3 ES measurements'
+                msg = "Cannont run 6S as number of ES measurmeents < 3"
                 print(msg)
                 Utilities.writeLogFile(msg)
 
