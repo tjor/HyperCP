@@ -90,7 +90,7 @@ class ProcessL1b:
     @staticmethod
     def read_unc_coefficient_class(root, inpath, radcal_dir):
         ''' SeaBird or TriOS'''
-
+    
         # Read Uncertainties_new_char from provided files
         gp = root.addGroup("RAW_UNCERTAINTIES")
         gp.attributes['FrameType'] = 'NONE'  # add FrameType = None so grp passes a quality check later
@@ -546,7 +546,6 @@ class ProcessL1b:
         elif ConfigFile.settings["bL1bCal"] == 3:
             node.attributes['CAL_TYPE'] = 'FRM-Full'
         node.attributes['WAVE_INTERP'] = str(ConfigFile.settings['fL1bInterpInterval']) + ' nm'
-
 
         msg = f"ProcessL1b.processL1b: {timestr}"
         print(msg)

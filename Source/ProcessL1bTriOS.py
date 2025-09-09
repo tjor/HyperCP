@@ -311,7 +311,7 @@ class ProcessL1bTriOS:
                         continue
                     else:
                         newGroup.datasets[ds].datasetToColumns()
-   
+
         # Add a dataset to each group for DATETIME, as defined by TIMETAG2 and DATETAG
         node  = Utilities.rootAddDateTime(node)
 
@@ -334,6 +334,7 @@ class ProcessL1bTriOS:
             print("Class-Based - uncertainty computed from class-based and RADCAL")
             print('Class-Based:', classbased_dir)
             print('RADCAL:', radcal_dir)
+        
             node = ProcessL1b.read_unc_coefficient_class(node, classbased_dir, radcal_dir)
             if node is None:
                 msg = 'Error running class based uncertainties.'
@@ -370,7 +371,7 @@ class ProcessL1bTriOS:
                 print(msg)
                 Utilities.writeLogFile(msg)
                 return None
-
+     
         # Interpolate only the Ancillary group, and then fold in model data
         if not ProcessL1b_Interp.interp_Anc(node, outFilePath):
             msg = 'Error interpolating ancillary data'
@@ -386,6 +387,7 @@ class ProcessL1bTriOS:
             print(msg)
             Utilities.writeLogFile(msg)
             modRoot = GetAnc.getAnc(ancGroup)
+     
         # Retrieve ECMWF model ancillary data
         elif ConfigFile.settings["bL1bGetAnc"] == 2:
             msg = 'ECMWF data for Wind and AOD may be used to replace blank values. Reading in model data...'

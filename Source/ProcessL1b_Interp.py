@@ -44,6 +44,7 @@ class ProcessL1b_Interp:
                 ltGroup = gp
             if gp.id.startswith("SunTracker"):
                 STGroup = gp
+            
 
         # Conversion of datasets within groups to move date/timestamps into
         # the data arrays and add datetime column. Also can change dataset name.
@@ -85,18 +86,25 @@ class ProcessL1b_Interp:
                 sogData.datasetToColumns()
                 newGPSGroup.datasets['SPEED'].id="SOG"
             newGPSGroup.attributes["SOURCE"] = 'GPS'
-        else:
+        elif gpsGroup is None and STGroup.id.endswith("sorad") == False:
             # These are from the ancillary file; place in GPS
             #   Ignore COURSE and SOG
             # TODO: If GPS is part of the SunTracker group, and gpsGroup was not yet established, pull Lat/Lon from Suntracker Group
-            ProcessL1b_Interp.convertDataset(ancGroup, "LATITUDE", newGPSGroup, "LATITUDE")
-            ProcessL1b_Interp.convertDataset(ancGroup, "LONGITUDE", newGPSGroup, "LONGITUDE")
-            latData = newGPSGroup.getDataset("LATITUDE")
-            lonData = newGPSGroup.getDataset("LONGITUDE")
-            newGPSGroup.attributes["SOURCE"] = 'ANCILLARY'
-            newGPSGroup.attributes["CalFileName"] = 'ANCILLARY'
-
-
+                ProcessL1b_Interp.convertDataset(ancGroup, "LATITUDE", newGPSGroup, "LATITUDE")
+                ProcessL1b_Interp.convertDataset(ancGroup, "LONGITUDE", newGPSGroup, "LONGITUDE")
+                latData = newGPSGroup.getDataset("LATITUDE")
+                lonData = newGPSGroup.getDataset("LONGITUDE")
+                newGPSGroup.attributes["SOURCE"] = 'ANCILLARY'
+                newGPSGroup.attributes["CalFileName"] = 'ANCILLARY'
+        elif gpsGroup is None and STGroup.id.endswith("sorad") == True: # this is the case where GPS is part of suntracker group
+                ProcessL1b_Interp.convertDataset(STGroup, "LATITUDE", newGPSGroup, "LATITUDE")
+                ProcessL1b_Interp.convertDataset(STGroup, "LONGITUDE", newGPSGroup, "LONGITUDE")
+                latData = newGPSGroup.getDataset("LATITUDE")
+                lonData = newGPSGroup.getDataset("LONGITUDE")
+                newGPSGroup.attributes["SOURCE"] = 'SUNTRACKER_Sorad'
+                newGPSGroup.attributes["CalFileName"] = 'SUNTRACKER_Sorad'
+ 
+   
         if STGroup is not None:
             newSTGroup = node.addGroup('ST_TEMP') # temporary
             for ds in STGroup.datasets:
@@ -110,7 +118,13 @@ class ProcessL1b_Interp:
                 if ds == 'SZA':
                     ProcessL1b_Interp.convertDataset(STGroup, "SZA", newSTGroup, "SZA")
                     szaData = newSTGroup.datasets['SZA']
-
+                if ds == 'LATITUDE': # GPS fields have also been added for So-Rad
+                    ProcessL1b_Interp.convertDataset(STGroup, "LATITUDE", newSTGroup, "LATITUDE")
+                    latData = newSTGroup.datasets['LATITUDE']
+                if ds == 'LONGITUDE':
+                    ProcessL1b_Interp.convertDataset(STGroup, "LONGITUDE", newSTGroup, "LONGITUDE")
+                    lonData = newSTGroup.datasets['LONGITUDE']
+                    
 
         newAncGroup = node.addGroup("ANCILLARY_TEMP")
         newAncGroup.attributes = ancGroup.attributes.copy()
